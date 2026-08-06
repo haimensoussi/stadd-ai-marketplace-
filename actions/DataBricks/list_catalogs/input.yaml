@@ -1,0 +1,24 @@
+inputs:
+
+system:
+
+  - name: DATABRICKS_HOST
+    type: string
+    required: true
+    source: RunContext
+
+  - name: DATABRICKS_TOKEN
+    type: secret
+    required: true
+    source: RunContext
+
+  - name: DATABRICKS_TIMEOUT
+    type: integer
+    required: false
+    default: 120
+    source: RunContext
+
+  - name: DATABRICKS_PROXY
+    type: string
+    required: false
+    source: RunContext
