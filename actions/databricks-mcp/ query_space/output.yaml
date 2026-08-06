@@ -1,1 +1,25 @@
+outputs:
 
+  - name: conversation_id
+    display_name: Conversation ID
+    type: string
+    required: true
+    description: Identifiant unique de la conversation.
+
+  - name: message_id
+    display_name: Message ID
+    type: string
+    required: true
+    description: Identifiant du message envoyé au Genie Space.
+
+  - name: status
+    display_name: Status
+    type: string
+    required: true
+    description: Statut de la requête.
+
+  - name: created_at
+    display_name: Date de création
+    type: datetime
+    required: false
+    description: Date de création de la requête.
