@@ -1,1 +1,16 @@
+inputs:
 
+  - name: query
+    display_name: Question
+    type: string
+    required: true
+    description: >
+      Question en langage naturel envoyée au Databricks Genie Space.
+
+  - name: conversation_id
+    display_name: Conversation
+    type: string
+    required: false
+    description: >
+      Identifiant de la conversation existante.
+      Si ce paramètre est vide, une nouvelle conversation est créée.
