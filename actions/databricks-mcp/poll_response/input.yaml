@@ -1,1 +1,13 @@
+inputs:
 
+  - name: conversation_id
+    display_name: Conversation ID
+    type: string
+    required: true
+    description: Identifiant de la conversation.
+
+  - name: message_id
+    display_name: Message ID
+    type: string
+    required: true
+    description: Identifiant du message.
