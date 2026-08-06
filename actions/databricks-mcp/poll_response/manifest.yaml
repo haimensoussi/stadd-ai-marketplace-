@@ -1,0 +1,23 @@
+id: databricks.mcp.poll_response
+
+name: Poll Response
+
+display_name: Poll Response
+
+description: Récupère le résultat d'une requête Genie.
+
+provider: databricks-mcp
+
+category: genie
+
+version: 1.0.0
+
+type: action
+
+sdk_client: DatabricksMCPClient
+
+sdk_method: poll_response
+
+inputs: input.yaml
+
+outputs: output.yaml
