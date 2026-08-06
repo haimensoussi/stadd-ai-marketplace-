@@ -1,0 +1,7 @@
+outputs:
+
+  - name: response
+    display_name: Réponse
+    type: object
+    required: true
+    description: Réponse retournée par le serveur MCP Databricks.
