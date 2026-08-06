@@ -1,0 +1,40 @@
+id: databricks.catalog.list_catalogs
+
+name: List Catalogs
+
+display_name: List Catalogs
+
+description: Retrieve the list of Unity Catalog catalogs.
+
+provider: databricks
+
+category: catalog
+
+type: action
+
+version: 1.0.0
+
+sdk_client: DatabricksClient
+
+sdk_method: list_catalogs
+
+entrypoint: action.py
+
+inputs: input.yaml
+
+outputs: output.yaml
+
+author: Horizon
+
+tags:
+  - databricks
+  - unity-catalog
+  - catalog
+
+capabilities:
+  - Catalog.List
+
+permissions:
+  - databricks.catalog.read
+
+timeout: 60
