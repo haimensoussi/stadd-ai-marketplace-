@@ -1,0 +1,15 @@
+name: get_tool
+
+description: Retourne la description d'un outil MCP ServiceNow.
+
+version: 1.0.0
+
+author: HORIZON
+
+client: ServiceNowMCPClient
+
+inputs:
+  - tool_name
+
+outputs:
+  - tool
