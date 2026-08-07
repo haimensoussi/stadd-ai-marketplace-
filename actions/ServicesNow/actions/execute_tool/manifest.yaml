@@ -1,0 +1,16 @@
+name: execute_tool
+
+description: Exécute un outil du serveur MCP ServiceNow.
+
+version: 1.0.0
+
+author: HORIZON
+
+client: ServiceNowMCPClient
+
+inputs:
+  - tool_name
+  - arguments
+
+outputs:
+  - result
