@@ -1,0 +1,3 @@
+tool:
+  type: object
+  description: Description complète de l'outil MCP.
