@@ -1,1 +1,4 @@
-
+tool_name:
+  type: string
+  required: true
+  description: Nom de l'outil MCP.
