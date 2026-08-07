@@ -1,1 +1,55 @@
+from logs.logs import logger
 
+from aistudio.model.run.RunContext import RunContext
+
+from utils.inputs import get_input_value
+from utils.exceptions import AppException
+
+from clients.ServiceNowMCPClient import ServiceNowMCPClient
+
+
+async def action(context: RunContext):
+
+    logger.info("ServiceNow MCP - Execute Tool")
+
+    try:
+
+        tool_name = get_input_value(context, "tool_name")
+
+        arguments = get_input_value(context, "arguments")
+
+        context.trace(f"Execution du tool MCP : {tool_name}")
+
+        client = ServiceNowMCPClient(context)
+
+        result = await client.execute_tool(
+            tool_name=tool_name,
+            arguments=arguments
+        )
+
+        context.addValue(
+            "result",
+            result,
+            type="object"
+        )
+
+        context.bot = f"L'outil '{tool_name}' a été exécuté avec succès."
+
+        context.trace("Tool exécuté avec succès")
+
+        return context
+
+    except AppException:
+        raise
+
+    except Exception as ex:
+
+        logger.exception(ex)
+
+        context.traceError(str(ex))
+
+        raise AppException(
+            status_code=500,
+            app_code="SERVICENOW_MCP_EXECUTE_TOOL_ERROR",
+            message=str(ex)
+        )
