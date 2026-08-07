@@ -1,0 +1,17 @@
+{
+    "tool": {
+        "name": "create_incident",
+        "description": "Créer un incident ServiceNow.",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "short_description": {
+                    "type": "string"
+                },
+                "priority": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
