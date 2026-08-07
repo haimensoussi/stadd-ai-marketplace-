@@ -1,0 +1,9 @@
+tool_name:
+  type: string
+  required: true
+  description: Nom du Tool MCP.
+
+arguments:
+  type: object
+  required: true
+  description: Paramètres du Tool.
