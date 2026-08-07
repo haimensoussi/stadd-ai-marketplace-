@@ -1,1 +1,327 @@
+# HORIZON Provider – ServiceNow MCP
 
+## Présentation
+
+Le **ServiceNow MCP Provider** permet à la plateforme **HORIZON** de communiquer avec un serveur **Model Context Protocol (MCP)** exposé par ServiceNow.
+
+Contrairement à une intégration REST classique, HORIZON ne connaît pas les API ServiceNow.
+
+Le Provider découvre automatiquement les outils (Tools) exposés par le serveur MCP puis les exécute à la demande des Agents IA.
+
+Cette approche permet de construire une intégration générique, maintenable et indépendante des API propriétaires.
+
+---
+
+# Architecture
+
+```text
+                    HORIZON
+
+              Agent IA / Runtime
+
+                     │
+
+                HORIZON Action
+
+                     │
+
+           ServiceNowMCPClient
+
+                     │
+
+                 MCP Protocol
+
+                     │
+
+            ServiceNow MCP Server
+
+                     │
+
+      ┌──────────────┼────────────────┐
+      │              │                │
+
+  Incident       Change         Service Catalog
+
+      │              │                │
+
+     CMDB       Knowledge        Users / Groups
+```
+
+---
+
+# Architecture du projet
+
+```text
+servicenow-mcp/
+
+│
+├── README.md
+├── provider.yaml
+├── requirements.txt
+├── pyproject.toml
+│
+├── clients/
+│   └── ServiceNowMCPClient.py
+│
+├── actions/
+│
+│   ├── list_tools/
+│   │
+│   ├── get_tool/
+│   │
+│   ├── execute_tool/
+│   │
+│   └── health_check/
+│
+├── tests/
+│
+└── docs/
+```
+
+---
+
+# Philosophie
+
+Le Provider ne développe **aucune logique métier ServiceNow**.
+
+Toute la logique est portée par le serveur MCP.
+
+Le Provider HORIZON ne fait que :
+
+- se connecter au serveur MCP
+- découvrir les outils disponibles
+- récupérer la description d'un outil
+- exécuter un outil
+- retourner le résultat au Runtime HORIZON
+
+---
+
+# Catalogue des Actions
+
+## list_tools
+
+Retourne la liste des outils disponibles.
+
+Exemple :
+
+- create_incident
+- update_incident
+- search_incidents
+- close_incident
+- search_cmdb
+- create_change
+
+---
+
+## get_tool
+
+Retourne la description complète d'un outil.
+
+Exemple :
+
+```json
+{
+    "name":"create_incident",
+    "description":"Créer un incident ServiceNow",
+    "inputSchema":{}
+}
+```
+
+---
+
+## execute_tool
+
+Exécute un Tool MCP.
+
+Entrées
+
+```json
+{
+    "tool_name":"create_incident",
+    "arguments":{
+        "short_description":"Erreur Horizon",
+        "priority":"1"
+    }
+}
+```
+
+Sortie
+
+```json
+{
+    "number":"INC0012458",
+    "state":"New"
+}
+```
+
+---
+
+## health_check
+
+Vérifie la disponibilité du serveur MCP.
+
+Retour
+
+```json
+{
+    "status":"UP"
+}
+```
+
+---
+
+# ServiceNowMCPClient
+
+Le client encapsule toute la communication avec le serveur MCP.
+
+Fonctions principales
+
+- connect()
+- disconnect()
+- health_check()
+- list_tools()
+- get_tool()
+- execute_tool()
+
+Aucune Action HORIZON ne communique directement avec le serveur MCP.
+
+---
+
+# Configuration
+
+Le Runtime injecte automatiquement les paramètres.
+
+```
+SERVICENOW_MCP_URL
+
+SERVICENOW_MCP_CLIENT_ID
+
+SERVICENOW_MCP_CLIENT_SECRET
+
+SERVICENOW_MCP_SCOPE
+
+SERVICENOW_MCP_TIMEOUT
+
+SERVICENOW_PROXY
+```
+
+Les secrets sont stockés dans le coffre-fort HORIZON.
+
+---
+
+# Cycle d'exécution
+
+```text
+Question utilisateur
+
+↓
+
+Agent HORIZON
+
+↓
+
+Action execute_tool
+
+↓
+
+ServiceNowMCPClient
+
+↓
+
+Serveur MCP
+
+↓
+
+Tool
+
+↓
+
+Résultat
+
+↓
+
+RunContext
+
+↓
+
+Utilisateur
+```
+
+---
+
+# Exemple
+
+Question
+
+> Créer un incident P1.
+
+Agent
+
+↓
+
+execute_tool()
+
+↓
+
+Tool
+
+```
+create_incident
+```
+
+↓
+
+Résultat
+
+```json
+{
+    "number":"INC0012458",
+    "state":"New"
+}
+```
+
+---
+
+# Avantages
+
+- Architecture standard MCP
+- Aucun appel REST dans les Actions
+- Découverte automatique des Tools
+- Compatible avec les Agents IA HORIZON
+- Réduction du code spécifique ServiceNow
+- Évolutif
+- Maintenable
+- Compatible Python 3.11
+- Conforme aux standards HORIZON
+
+---
+
+# Évolutions futures
+
+Le Provider pourra être enrichi avec :
+
+- Authentification OAuth
+- Cache des Tools
+- Streaming MCP
+- Journalisation avancée
+- Gestion des sessions
+- Retry automatique
+- Monitoring
+- Métriques
+- Traces distribuées
+- Support Multi-Instance ServiceNow
+
+---
+
+# Vision HORIZON Connectivity
+
+Le Provider ServiceNow MCP s'inscrit dans la stratégie **HORIZON Connectivity**, qui vise à standardiser l'intégration avec les plateformes de l'entreprise à travers des protocoles et des Providers homogènes.
+
+```
+
+Chaque Provider respecte les mêmes principes :
+
+- un Client qui encapsule toute la communication externe ;
+- des Actions HORIZON légères et réutilisables ;
+- un `RunContext` comme unique point d'échange de données ;
+- une architecture homogène facilitant l'ajout de nouveaux Providers.
