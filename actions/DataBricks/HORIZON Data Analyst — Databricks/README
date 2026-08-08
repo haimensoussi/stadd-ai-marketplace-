@@ -34,7 +34,26 @@ DatabricksClient  SocleClient       DatabricksClient
 ```
 
 ---
+## Databricks Inputs
 
+### Configuration technique
+
+DATABRICKS_HOST
+URL du workspace Databricks.
+
+DATABRICKS_TOKEN
+Token d'authentification Databricks.
+Secret fourni via RunContext.
+Ne jamais stocker dans Git.
+
+DATABRICKS_TIMEOUT
+Timeout des appels Databricks.
+
+DATABRICKS_PROXY
+Proxy Databricks, si nécessaire.
+
+DATABRICKS_WAREHOUSE_ID
+Identifiant du SQL Warehouse utilisé pour l'exécution des requêtes.
 ## 3. Composants
 
 ### Agent
