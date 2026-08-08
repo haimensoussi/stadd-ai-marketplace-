@@ -5,9 +5,6 @@
 `HorizonDataAnalyst` est un Agent HORIZON permettant d'analyser les données
 Databricks à partir de questions métier en langage naturel.
 
-Le projet est une migration architecturale du workflow n8n vers les standards
-HORIZON.
-
 ---
 
 ## 2. Architecture
