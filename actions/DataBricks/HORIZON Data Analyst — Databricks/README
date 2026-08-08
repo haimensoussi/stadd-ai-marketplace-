@@ -1,1 +1,182 @@
+# HORIZON Data Analyst — Databricks
+
+## 1. Objectif
+
+`HorizonDataAnalyst` est un Agent HORIZON permettant d'analyser les données
+Databricks à partir de questions métier en langage naturel.
+
+Le projet est une migration architecturale du workflow n8n vers les standards
+HORIZON.
+
+---
+
+## 2. Architecture
+
+```text
+Utilisateur
+    ↓
+HorizonDataAnalyst
+    ↓
+Actions
+    ↓
+┌───────────────────┬───────────────────┐
+│                   │                   │
+▼                   ▼                   ▼
+Discovery       Generate SQL        Execute SQL
+│                   │                   │
+▼                   ▼                   ▼
+DatabricksClient  SocleClient       DatabricksClient
+│                   │                   │
+└───────────────────┴───────────────────┘
+                    ↓
+              Résultats SQL
+                    ↓
+             Analyse métier
+                    ↓
+             Réponse utilisateur
+```
+
+---
+
+## 3. Composants
+
+### Agent
+
+**`HorizonDataAnalyst`**
+
+Orchestre l'ensemble du processus d'analyse.
+
+### Actions
+
+```text
+ListTablesAction
+ListColumnsAction
+GenerateSQLAction
+ExecuteSQLAction
+```
+
+Les Actions existantes HORIZON doivent être réutilisées avant toute création.
+
+### Clients
+
+**`DatabricksClient`**
+
+Accès à Databricks et Unity Catalog.
+
+**`SocleClient`**
+
+Accès aux capacités IA / LLM du socle HORIZON.
+
+Aucun appel direct à Databricks ou au LLM depuis une Action lorsqu'un Client
+existe.
+
+---
+
+## 4. Processus d'analyse
+
+```text
+Question
+   ↓
+Compréhension
+   ↓
+Découverte des données
+   ↓
+Génération SQL
+   ↓
+Exécution SQL
+   ↓
+Analyse des résultats
+   ↓
+Synthèse métier
+```
+
+L'Agent ne doit jamais inventer :
+
+* tables ;
+* colonnes ;
+* données ;
+* résultats.
+
+Databricks est la source de vérité.
+
+---
+
+## 5. Standards HORIZON
+
+Les Actions respectent :
+
+```python
+async def action(context: RunContext)
+```
+
+et utilisent :
+
+```text
+get_input_value()
+context.addValue()
+context.bot
+logger
+context.trace()
+context.traceError()
+AppException
+```
+
+Python 3.11.
+
+Les secrets sont gérés via `RunContext`.
+
+---
+
+## 6. Principe de développement
+
+```text
+Chercher dans HORIZON
+        ↓
+Réutiliser
+        ↓
+Développer uniquement ce qui manque
+```
+
+Le projet ne doit pas recréer :
+
+* `SocleClient` ;
+* `DatabricksClient` ;
+* Runtime ;
+* Memory ;
+* Actions déjà disponibles.
+
+---
+
+## 7. Structure
+
+```text
+horizon-data-analyst-databricks/
+├── agent/
+├── actions/
+├── clients/
+├── connectors/
+├── prompts/
+├── tests/
+├── deployment/
+├── manifest.json
+└── README.md
+```
+
+Les dossiers seront construits progressivement, en commençant par `agent/`.
+
+---
+
+## 8. V1
+
+La V1 couvre :
+
+* analyse conversationnelle Databricks ;
+* découverte des données ;
+* génération SQL ;
+* exécution SQL ;
+* analyse des résultats ;
+* synthèse métier.
+
+Les fonctionnalités Data Quality, Lineage, Power Automate, Azure SQL et
+PostgreSQL seront ajoutées ultérieurement.
 
